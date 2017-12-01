@@ -136,7 +136,8 @@ public:
         // bit hash currently doesn't save anything due to alignment
         // with 64 bit compile.
         Hsieh_hash_fcn f;
-        return ((KeyData)(f(name)) << 4);
+        KeyData volatile kd = f(name);
+        return (kd << 4);
     }
     static MetaDentry* create(fid_t parent, const string& fname, fid_t myID,
         MetaFattr* fa)
