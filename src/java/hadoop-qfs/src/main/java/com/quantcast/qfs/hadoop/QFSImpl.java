@@ -300,7 +300,12 @@ class QFSImpl implements IFSImpl {
   protected QFSOutputStream createQFSOutputStream(KfsAccess kfsAccess, String path,
                                                   short replication, boolean overwrite,
                                                   boolean append, int mode) throws IOException {
-    return new QFSOutputStream(kfsAccess, path, replication, overwrite, append, mode);
+    if (append || "S" == CREATE_PARAMS) {
+      return new QFSOutputStream(kfsAccess, path, replication, overwrite, append, mode);
+    }
+    final QFSOutputStream ret = new QFSOutputStream(kfsAccess, path, overwrite, CREATE_PARAMS);
+    setPermission(path, mode);
+    return ret; 
   }
 
   protected QFSOutputStream createQFSOutputStream(KfsAccess kfsAccess, String path,
